@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tom-draper/football-cli#readme",
   "dependencies": {
+    "chalk": "^5.2.0",
     "node-fetch": "^3.3.0"
   }
 }
