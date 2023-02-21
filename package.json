@@ -1,0 +1,23 @@
+{
+  "name": "football-cli",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A command-line tool for checking score, fixtures and standings.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tom-draper/football-cli.git"
+  },
+  "author": "Tom Draper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tom-draper/football-cli/issues"
+  },
+  "homepage": "https://github.com/tom-draper/football-cli#readme",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  }
+}
