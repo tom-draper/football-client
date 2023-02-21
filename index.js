@@ -16,12 +16,17 @@ async function getData(endpoint) {
   if (res.status == 200) {
     return await res.json();
   } else {
+    console.log("Status code:", res.status);
     return { message: "Error: Data fetch from API failed." };
   }
 }
 
 async function upcoming() {
   const data = await getData("matches");
+
+  if ("message" in data) {
+    return;
+  }
 
   let inplay = [];
   let scheduled = [];
@@ -63,22 +68,81 @@ async function upcoming() {
 }
 
 const competitionID = {
-  'Premier League': 2021,
-  'Championship': 2016,
-  'Champions League': 2001,
-  'Ligue 1': 2015,
-  'Bundesliga': 2002,
-  'Serie A': 2019,
-}
+  "Premier League": 2021,
+  Championship: 2016,
+  "Champions League": 2001,
+  "Ligue 1": 2015,
+  Bundesliga: 2002,
+  "Serie A": 2019,
+};
 
 async function standings(competition) {
-  const data = await getData(`competitions/${competitionID[competition]}/standings`);
+  const data = await getData(
+    `competitions/${competitionID[competition]}/standings`
+  );
+
+  if ("message" in data) {
+    return;
+  }
+
+  console.log(chalk.blueBright(`${competition.toUpperCase()} STANDINGS:`));
   for (let row of data.standings[0].table) {
     console.log(
-      `${chalk.gray(row.position)} ${row.team.shortName} ${row.playedGames} ${row.won} ${row.draw} ${row.lost} ${row.goalsFor} ${row.goalsAgainst} ${row.goalDifference} ${row.lost} ${row.points}`
-    )
+      `${chalk.gray(row.position)} ${row.team.shortName} ${row.playedGames} ${
+        row.won
+      } ${row.draw} ${row.lost} ${row.goalsFor} ${row.goalsAgainst} ${
+        row.goalDifference
+      } ${row.lost} ${row.points}`
+    );
+  }
+}
+
+async function scorers(competition) {
+  const data = await getData(
+    `competitions/${competitionID[competition]}/scorers`
+  );
+
+  if ("message" in data) {
+    return;
+  }
+
+  console.log(chalk.blueBright("TOP GOALSCORERS:"));
+  for (let player of data.scorers) {
+    console.log(
+      `${player.player.name} ${chalk.grey(
+        `(${player.team.shortName})`
+      )} ${chalk.greenBright(player.goals)} ${chalk.blueBright(player.assists)}`
+    );
+  }
+}
+
+async function fixtures(competition) {
+  const data = await getData(
+    `competitions/${competitionID[competition]}/matches`
+  );
+
+  if ("message" in data) {
+    return;
+  }
+
+  console.log(chalk.blueBright(`${competition.toUpperCase()} FIXTURES`));
+  for (let match of data.matches) {
+    const matchdate = new Date(match.utcDate);
+    if (matchdate > new Date()) {
+      console.log(
+        `${chalk.grey(
+          matchdate
+            .toLocaleString()
+            .replace(",", "")
+            .replace(/:00$/, "")
+            .replace("/20", "/")
+        )} ${match.homeTeam.shortName} vs ${match.awayTeam.shortName}`
+      );
+    }
   }
 }
 
 upcoming();
-standings('Premier League');
+standings("Premier League");
+scorers("Premier League");
+fixtures("Premier League");
