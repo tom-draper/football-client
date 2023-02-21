@@ -62,4 +62,23 @@ async function upcoming() {
   }
 }
 
+const competitionID = {
+  'Premier League': 2021,
+  'Championship': 2016,
+  'Champions League': 2001,
+  'Ligue 1': 2015,
+  'Bundesliga': 2002,
+  'Serie A': 2019,
+}
+
+async function standings(competition) {
+  const data = await getData(`competitions/${competitionID[competition]}/standings`);
+  for (let row of data.standings[0].table) {
+    console.log(
+      `${chalk.gray(row.position)} ${row.team.shortName} ${row.playedGames} ${row.won} ${row.draw} ${row.lost} ${row.goalsFor} ${row.goalsAgainst} ${row.goalDifference} ${row.lost} ${row.points}`
+    )
+  }
+}
+
 upcoming();
+standings('Premier League');
