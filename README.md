@@ -1,0 +1,5 @@
+# Football CLI
+
+```bash
+npx
+```
