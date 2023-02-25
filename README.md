@@ -2,7 +2,7 @@
 
 A command-line tool for checking football scores, fixtures and standings.
 
-To run:
+## Usage
 
 ```bash
 npx football-client
