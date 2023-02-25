@@ -1,5 +1,5 @@
 # Football CLI
 
 ```bash
-npx
+npx football-client
 ```
