@@ -1,24 +1,33 @@
 {
-  "name": "football-cli",
+  "name": "football-client",
   "type": "module",
-  "version": "1.0.0",
-  "description": "A command-line tool for checking score, fixtures and standings.",
+  "version": "1.0.9",
+  "description": "A CLI tool for checking score, fixtures and standings.",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tom-draper/football-cli.git"
+    "url": "git+https://github.com/tom-draper/football-client.git"
   },
   "author": "Tom Draper",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tom-draper/football-cli/issues"
+    "url": "https://github.com/tom-draper/football-client/issues"
   },
-  "homepage": "https://github.com/tom-draper/football-cli#readme",
+  "keywords": [
+    "football",
+    "premier league",
+    "soccer",
+    "javascript"
+  ],
+  "homepage": "https://github.com/tom-draper/football-client#readme",
   "dependencies": {
     "chalk": "^5.2.0",
+    "dotenv": "^16.0.3",
     "node-fetch": "^3.3.0"
   }
 }

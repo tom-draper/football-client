@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 import chalk from "chalk";
@@ -28,9 +29,9 @@ async function upcoming() {
     return;
   }
 
-  let inplay = [];
-  let scheduled = [];
-  for (let match of data.matches) {
+  const inplay = [];
+  const scheduled = [];
+  for (const match of data.matches) {
     if (match.status === "IN_PLAY" || match.status === "PAUSED") {
       inplay.push(match);
     } else {
@@ -38,31 +39,37 @@ async function upcoming() {
     }
   }
 
-  console.log(chalk.blueBright("IN-PLAY:"));
-  for (let match of inplay) {
-    console.log(
-      `${chalk.grey(
-        new Date(match.utcDate).toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      )} ${match.homeTeam.shortName} ${chalk.yellowBright("0 - 0")} ${
-        match.awayTeam.shortName
-      } ${chalk.grey(`(${match.competition.name})`)}`
-    );
+  if (inplay.length > 0) {
+    console.log(chalk.blueBright(`IN-PLAY:`));
+    for (const match of inplay) {
+      console.log(
+        `${chalk.grey(
+          new Date(match.utcDate).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        )} ${match.homeTeam.shortName} ${chalk.yellowBright("0 - 0")} ${
+          match.awayTeam.shortName
+        } ${chalk.grey(`(${match.competition.name})`)}`
+      );
+    }
+    console.log();
   }
-  console.log();
-  console.log(chalk.blueBright("SCHEDULED:"));
-  for (let match of scheduled) {
+
+  console.log(chalk.blueBright(`SCHEDULED:`));
+  for (const match of scheduled) {
     console.log(
       `${chalk.grey(
         new Date(match.utcDate).toLocaleTimeString("en-GB", {
           hour: "2-digit",
           minute: "2-digit",
         })
-      )} ${match.homeTeam.shortName} ${chalk.grey("vs")} ${
-        match.awayTeam.shortName
-      } ${chalk.grey(`(${match.competition.name})`)}`
+      )} ${ljust(
+        match.homeTeam.shortName +
+          chalk.grey(" vs ") +
+          match.awayTeam.shortName,
+        40
+      )} ${chalk.grey(`${match.competition.name}`)}`
     );
   }
 }
@@ -77,6 +84,8 @@ const competitionID = {
 };
 
 async function standings(competition) {
+  competition = setDefaultCompetition();
+
   const data = await getData(
     `competitions/${competitionID[competition]}/standings`
   );
@@ -86,18 +95,27 @@ async function standings(competition) {
   }
 
   console.log(chalk.blueBright(`${competition.toUpperCase()} STANDINGS:`));
-  for (let row of data.standings[0].table) {
+  for (const row of data.standings[0].table) {
     console.log(
-      `${chalk.gray(row.position)} ${row.team.shortName} ${row.playedGames} ${
-        row.won
-      } ${row.draw} ${row.lost} ${row.goalsFor} ${row.goalsAgainst} ${
-        row.goalDifference
-      } ${row.lost} ${row.points}`
+      `${chalk.gray(ljust(row.position, 2))} ${ljust(
+        row.team.shortName,
+        18
+      )} ${rjust(row.playedGames, 2)} ${rjust(row.won, 4)} ${rjust(
+        row.draw,
+        2
+      )} ${rjust(row.lost, 2)} ${rjust(row.goalsFor, 4)} ${rjust(
+        row.goalsAgainst,
+        2
+      )} ${rjust(row.goalDifference, 3)} ${chalk.yellowBright(
+        rjust(row.points, 4)
+      )}`
     );
   }
 }
 
 async function scorers(competition) {
+  competition = setDefaultCompetition();
+
   const data = await getData(
     `competitions/${competitionID[competition]}/scorers`
   );
@@ -107,16 +125,20 @@ async function scorers(competition) {
   }
 
   console.log(chalk.blueBright("TOP GOALSCORERS:"));
-  for (let player of data.scorers) {
+  for (const player of data.scorers) {
     console.log(
-      `${player.player.name} ${chalk.grey(
-        `(${player.team.shortName})`
-      )} ${chalk.greenBright(player.goals)} ${chalk.blueBright(player.assists)}`
+      `${ljust(player.player.name, 20)} ${chalk.grey(
+        ljust(`${player.team.shortName}`, 16)
+      )} ${chalk.greenBright(rjust(player.goals, 2))} ${chalk.blueBright(
+        rjust(player.assists, 2)
+      )}`
     );
   }
 }
 
 async function fixtures(competition) {
+  competition = setDefaultCompetition();
+
   const data = await getData(
     `competitions/${competitionID[competition]}/matches`
   );
@@ -125,8 +147,8 @@ async function fixtures(competition) {
     return;
   }
 
-  console.log(chalk.blueBright(`${competition.toUpperCase()} FIXTURES`));
-  for (let match of data.matches) {
+  console.log(chalk.blueBright(`${competition.toUpperCase()} FIXTURES:`));
+  for (const match of data.matches) {
     const matchdate = new Date(match.utcDate);
     if (matchdate > new Date()) {
       console.log(
@@ -136,13 +158,116 @@ async function fixtures(competition) {
             .replace(",", "")
             .replace(/:00$/, "")
             .replace("/20", "/")
-        )} ${match.homeTeam.shortName} vs ${match.awayTeam.shortName}`
+            .replace(/\/\d\d /, " ")
+        )} ${match.homeTeam.shortName} ${chalk.grey("vs")} ${
+          match.awayTeam.shortName
+        }`
       );
     }
   }
 }
 
-upcoming();
-standings("Premier League");
-scorers("Premier League");
-fixtures("Premier League");
+function ljust(str, width) {
+  str = str.toString();
+  return str + " ".repeat(width).slice(str.length);
+}
+
+function rjust(str, width) {
+  str = str.toString();
+  return " ".repeat(width).slice(str.length) + str;
+}
+
+function setDefaultCompetition(current) {
+  if (current === undefined) {
+    return "Premier League";
+  }
+  return current;
+}
+
+function getArgs() {
+  let method;
+  let competition;
+  let team;
+  process.argv.forEach(function (val, index, array) {
+    if (
+      val === "upcoming" ||
+      val === "standings" ||
+      val === "scorers" ||
+      val === "fixtures"
+    ) {
+      method = val;
+    } else if (
+      val === "--competition" ||
+      val === "--comp" ||
+      (val === "-C" && index < array.length - 1)
+    ) {
+      competition = array[index + 1];
+    } else if (val === "--team" || val === "-T") {
+      team = array[index + 1];
+    }
+  });
+
+  return [method, competition, team];
+}
+
+function prompt(question, callback) {
+  const stdin = process.stdin,
+    stdout = process.stdout;
+
+  stdin.resume();
+  stdout.write(question);
+
+  stdin.once("data", function (data) {
+    callback(data.toString().trim());
+  });
+}
+
+async function mainMenu() {
+  prompt(
+    `${chalk.yellowBright("1")} Standings\n${chalk.yellowBright(
+      "2"
+    )} Fixtures\n${chalk.yellowBright("3")} Upcoming\n${chalk.yellowBright(
+      "4"
+    )} Scorers\n`,
+    async function (input) {
+      switch (input) {
+        case "1":
+          await standings(undefined);
+          process.exit();
+        case "2":
+          await fixtures(undefined);
+          process.exit();
+        case "3":
+          await upcoming();
+          process.exit();
+        case "4":
+          await scorers(undefined);
+          process.exit();
+        default:
+          mainMenu();
+      }
+    }
+  );
+}
+
+async function run() {
+  let [method, competition, team] = getArgs();
+  switch (method) {
+    case "upcoming":
+      await upcoming();
+      break;
+    case "standings":
+      await standings(competition);
+      break;
+    case "scorers":
+      await scorers(competition);
+      break;
+    case "fixtures":
+      await fixtures(competition);
+      break;
+    default:
+      mainMenu();
+  }
+}
+
+mainMenu();
