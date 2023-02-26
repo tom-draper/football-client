@@ -190,6 +190,7 @@ async function scorers(competition) {
   }
 
   console.log(chalk.blueBright("TOP GOALSCORERS:"));
+  console.log(rjust("G", 42), rjust("A", 2));
   for (const player of data.scorers) {
     console.log(
       `${ljust(player.player.name, 22)} ${chalk.grey(
