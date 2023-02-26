@@ -12,7 +12,9 @@ The script can be run using `npx` with the command:
 npx football-client
 ```
 
-Or installed on to your local system with:
+### Installation
+
+Alternatively you can install directly on to your local system with:
 
 ```bash
 npm i football-client
