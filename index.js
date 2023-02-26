@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import chalk from "chalk";
 import * as readline from "node:readline/promises"; // This uses the promise-based APIs
 import { stdin, stdout } from "node:process";
+import fs from "fs";
 
 let API_KEY;
 const URL = "https://api.football-data.org/v4/";
@@ -28,6 +29,7 @@ async function setAPIKey() {
   dotenv.config();
 
   API_KEY = process.env.X_AUTH_TOKEN;
+  const noEnvFile = API_KEY === undefined;
 
   while (API_KEY === undefined || API_KEY.trim() === "") {
     API_KEY = await rl.question(
@@ -39,6 +41,15 @@ async function setAPIKey() {
         "\nEnter X_AUTH_TOKEN: "
     );
     clearLastLines(3);
+  }
+
+  if (noEnvFile) {
+    // Save API key to a local .env file
+    fs.writeFile("./.env", `X_AUTH_TOKEN=${API_KEY}`, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+    });
   }
 }
 
