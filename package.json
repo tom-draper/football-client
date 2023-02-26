@@ -1,7 +1,7 @@
 {
   "name": "football-client",
   "type": "module",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A CLI tool for checking score, fixtures and standings.",
   "main": "index.js",
   "bin": "index.js",
