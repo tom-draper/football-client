@@ -3,15 +3,15 @@ import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 import chalk from "chalk";
 import * as readline from "node:readline/promises"; // This uses the promise-based APIs
-import { stdin, stdout } from "node:process";
+import { stdin as input, stdout as output } from "node:process";
 import fs from "fs";
 
 let API_KEY;
 const URL = "https://api.football-data.org/v4/";
 
 const rl = readline.createInterface({
-  input: stdin,
-  output: stdout,
+  input,
+  output,
 });
 
 function clearLastLine() {
@@ -103,9 +103,12 @@ async function upcoming() {
             hour: "2-digit",
             minute: "2-digit",
           })
-        )} ${match.homeTeam.shortName} ${chalk.yellowBright("0 - 0")} ${
-          match.awayTeam.shortName
-        } ${chalk.grey(`(${match.competition.name})`)}`
+        )} ${ljust(
+          match.homeTeam.shortName +
+            chalk.yellowBright(" 0 - 0 ") +
+            match.awayTeam.shortName,
+          40
+        )} ${chalk.grey(match.competition.name)}`
       );
     }
     console.log();
