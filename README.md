@@ -14,7 +14,7 @@ npx football-client
 
 ### Installation
 
-Alternatively you can install directly on to your local system with:
+Alternatively, you can install directly on to your local system with:
 
 ```bash
 npm i football-client
