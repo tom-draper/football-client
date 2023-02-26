@@ -22,7 +22,9 @@
     "football",
     "premier league",
     "soccer",
-    "javascript"
+    "javascript",
+    "command-line",
+    "tool"
   ],
   "homepage": "https://github.com/tom-draper/football-client#readme",
   "dependencies": {
