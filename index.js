@@ -139,6 +139,16 @@ async function standings(competition) {
   }
 
   console.log(chalk.blueBright(`${competition.toUpperCase()} STANDINGS:`));
+  console.log(
+    rjust("Pl", 24),
+    rjust("W", 4),
+    rjust("D", 2),
+    rjust("L", 2),
+    rjust("GF", 4),
+    rjust("GA", 2),
+    rjust("GD", 3),
+    rjust("P", 4)
+  );
   for (const row of data.standings[0].table) {
     console.log(
       `${chalk.gray(ljust(row.position, 2))} ${ljust(
