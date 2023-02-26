@@ -13,13 +13,32 @@ const rl = readline.createInterface({
   output: stdout,
 });
 
+function clearLastLine() {
+  process.stdout.moveCursor(0, -1); // Up one line
+  process.stdout.clearLine(1); // From cursor to end
+}
+
+function clearLastLines(N) {
+  for (let i = 0; i < N; i++) {
+    clearLastLine();
+  }
+}
+
 async function setAPIKey() {
   dotenv.config();
+
   API_KEY = process.env.X_AUTH_TOKEN;
-  while (API_KEY === undefined || API_KEY === "") {
+
+  while (API_KEY === undefined || API_KEY.trim() === "") {
     API_KEY = await rl.question(
-      "Account required from https://www.football-data.org/. Create a free account and enter your unique API key.\nEnter X_AUTH_TOKEN: "
+      chalk.yellowBright("Account required from ") +
+        chalk.whiteBright("https://www.football-data.org/") +
+        chalk.yellowBright(
+          "\nCreate a free account and enter your unique API key."
+        ) +
+        "\nEnter X_AUTH_TOKEN: "
     );
+    clearLastLines(3);
   }
 }
 
@@ -30,11 +49,18 @@ async function getData(endpoint) {
     },
   });
 
-  if (res.status == 200) {
+  if (res.status === 200) {
     return await res.json();
+  } else if (res.status === 400) {
+    console.log(
+      chalk.redBright(`Error: API key invalid.\nStatus code: ${res.status}`)
+    );
+    return { message: "Error: Data fetch from API failed. API key invalid." };
   } else {
     console.log(
-      `Error: Data fetch from API failed.\nStatus code: ${res.status}`
+      chalk.redBright(
+        `Error: Data fetch from API failed.\nStatus code: ${res.status}`
+      )
     );
     return { message: "Error: Data fetch from API failed." };
   }
@@ -145,7 +171,7 @@ async function scorers(competition) {
   console.log(chalk.blueBright("TOP GOALSCORERS:"));
   for (const player of data.scorers) {
     console.log(
-      `${ljust(player.player.name, 20)} ${chalk.grey(
+      `${ljust(player.player.name, 22)} ${chalk.grey(
         ljust(`${player.team.shortName}`, 16)
       )} ${chalk.greenBright(rjust(player.goals, 2))} ${chalk.blueBright(
         rjust(player.assists, 2)
@@ -177,7 +203,7 @@ async function fixtures(competition) {
             .replace(/:00$/, "")
             .replace("/20", "/")
             .replace(/\/\d\d /, " ")
-        )} ${match.homeTeam.shortName} ${chalk.grey("vs")} ${
+        )}  ${match.homeTeam.shortName} ${chalk.grey("vs")} ${
           match.awayTeam.shortName
         }`
       );
@@ -248,6 +274,8 @@ async function mainMenu() {
       "4"
     )} Scorers\n`
   );
+
+  clearLastLines(5);
 
   switch (input) {
     case "1":
