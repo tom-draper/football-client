@@ -6,7 +6,7 @@ Football data is sourced from https://www.football-data.org/, and a free account
 
 ## Usage
 
-The script can be run straight from npx with the command:
+The script can be run using `npx` with the command:
 
 ```bash
 npx football-client
