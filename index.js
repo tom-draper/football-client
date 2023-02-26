@@ -293,39 +293,40 @@ async function mainMenu() {
   switch (input) {
     case "1":
       await standings(undefined);
-      process.exit();
+      break;
     case "2":
       await fixtures(undefined);
-      process.exit();
+      break;
     case "3":
       await upcoming();
-      process.exit();
+      break;
     case "4":
       await scorers(undefined);
-      process.exit();
+      break;
     default:
-      mainMenu();
+      await mainMenu();
   }
 }
 
 async function run() {
   let [method, competition, team] = getArgs();
   switch (method) {
-    case "upcoming":
-      await upcoming();
-      break;
     case "standings":
       await standings(competition);
-      break;
-    case "scorers":
-      await scorers(competition);
       break;
     case "fixtures":
       await fixtures(competition);
       break;
+    case "upcoming":
+      await upcoming();
+      break;
+    case "scorers":
+      await scorers(competition);
+      break;
     default:
-      mainMenu();
+      await mainMenu();
   }
+  process.exit();
 }
 
 await setAPIKey();
