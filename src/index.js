@@ -275,18 +275,6 @@ function getArgs() {
   return [method, competition, team];
 }
 
-async function prompt(question, callback) {
-  const stdin = process.stdin,
-    stdout = process.stdout;
-
-  stdin.resume();
-  stdout.write(question);
-
-  stdin.once("data", async function (data) {
-    await callback(data.toString().trim());
-  });
-}
-
 async function mainMenu() {
   const input = await rl.question(
     `${chalk.yellowBright("1")} Standings\n${chalk.yellowBright(
