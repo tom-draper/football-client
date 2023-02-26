@@ -2,22 +2,40 @@
 import fetch from "node-fetch";
 import * as dotenv from "dotenv";
 import chalk from "chalk";
+import * as readline from "node:readline/promises"; // This uses the promise-based APIs
+import { stdin, stdout } from "node:process";
 
-dotenv.config();
-
+let API_KEY;
 const URL = "https://api.football-data.org/v4/";
+
+const rl = readline.createInterface({
+  input: stdin,
+  output: stdout,
+});
+
+async function setAPIKey() {
+  dotenv.config();
+  API_KEY = process.env.X_AUTH_TOKEN;
+  while (API_KEY === undefined || API_KEY === "") {
+    API_KEY = await rl.question(
+      "Account required from https://www.football-data.org/. Create a free account and enter your unique API key.\nEnter X_AUTH_TOKEN: "
+    );
+  }
+}
 
 async function getData(endpoint) {
   const res = await fetch(URL + endpoint, {
     headers: {
-      "X-Auth-Token": process.env.X_AUTH_TOKEN,
+      "X-Auth-Token": API_KEY,
     },
   });
 
   if (res.status == 200) {
     return await res.json();
   } else {
-    console.log("Status code:", res.status);
+    console.log(
+      `Error: Data fetch from API failed.\nStatus code: ${res.status}`
+    );
     return { message: "Error: Data fetch from API failed." };
   }
 }
@@ -210,44 +228,43 @@ function getArgs() {
   return [method, competition, team];
 }
 
-function prompt(question, callback) {
+async function prompt(question, callback) {
   const stdin = process.stdin,
     stdout = process.stdout;
 
   stdin.resume();
   stdout.write(question);
 
-  stdin.once("data", function (data) {
-    callback(data.toString().trim());
+  stdin.once("data", async function (data) {
+    await callback(data.toString().trim());
   });
 }
 
 async function mainMenu() {
-  prompt(
+  const input = await rl.question(
     `${chalk.yellowBright("1")} Standings\n${chalk.yellowBright(
       "2"
     )} Fixtures\n${chalk.yellowBright("3")} Upcoming\n${chalk.yellowBright(
       "4"
-    )} Scorers\n`,
-    async function (input) {
-      switch (input) {
-        case "1":
-          await standings(undefined);
-          process.exit();
-        case "2":
-          await fixtures(undefined);
-          process.exit();
-        case "3":
-          await upcoming();
-          process.exit();
-        case "4":
-          await scorers(undefined);
-          process.exit();
-        default:
-          mainMenu();
-      }
-    }
+    )} Scorers\n`
   );
+
+  switch (input) {
+    case "1":
+      await standings(undefined);
+      process.exit();
+    case "2":
+      await fixtures(undefined);
+      process.exit();
+    case "3":
+      await upcoming();
+      process.exit();
+    case "4":
+      await scorers(undefined);
+      process.exit();
+    default:
+      mainMenu();
+  }
 }
 
 async function run() {
@@ -270,4 +287,5 @@ async function run() {
   }
 }
 
-mainMenu();
+await setAPIKey();
+await mainMenu();
