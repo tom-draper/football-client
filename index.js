@@ -326,4 +326,4 @@ async function run() {
 }
 
 await setAPIKey();
-await mainMenu();
+await run();
