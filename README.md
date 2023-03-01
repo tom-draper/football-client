@@ -29,7 +29,7 @@ node index
 
 ### Arguments
 
-The menu option (`standings`, `fixtures`, `upcoming` or `scorers`) can be selected immediately from the command-line using a command-line argument.
+As an alternative to the main menu, the page (`standings`, `fixtures`, `upcoming` or `scorers`) can be specified as a command-line argument.
 
 ```bash
 npx football-client standings
