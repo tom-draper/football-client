@@ -139,10 +139,11 @@ const competitionID = {
   "Ligue 1": 2015,
   Bundesliga: 2002,
   "Serie A": 2019,
+  "Primera Division": 2014,
 };
 
 async function standings(competition) {
-  competition = setDefaultCompetition();
+  competition = setDefaultCompetition(competition);
 
   const data = await getData(
     `competitions/${competitionID[competition]}/standings`
@@ -182,7 +183,7 @@ async function standings(competition) {
 }
 
 async function scorers(competition) {
-  competition = setDefaultCompetition();
+  competition = setDefaultCompetition(competition);
 
   const data = await getData(
     `competitions/${competitionID[competition]}/scorers`
@@ -206,7 +207,7 @@ async function scorers(competition) {
 }
 
 async function fixtures(competition) {
-  competition = setDefaultCompetition();
+  competition = setDefaultCompetition(competition);
 
   const data = await getData(
     `competitions/${competitionID[competition]}/matches`
@@ -253,10 +254,33 @@ function setDefaultCompetition(current) {
   return current;
 }
 
+const competitionAlias = {
+  "premier-league": "Premier League",
+  premier_league: "Premier League",
+  pl: "Premier League",
+  premier: "Premier League",
+  cs: "Championship",
+  championship: "Champsionship",
+  efl: "Championship",
+  l1: "Ligue 1",
+  lu: "Ligue 1",
+  "ligue-1": "Ligue 1",
+  ligue_1: "Ligue 1",
+  "ligue-un": "Ligue 1",
+  ligue_un: "Ligue 1",
+  bundesliga: "Bundesliga",
+  bl: "Bundesliga",
+  sa: "Serie A",
+  "serie-a": "Serie A",
+  serie_a: "Serie A",
+  "la-liga": "Primera Division",
+  la_liga: "Primera Division",
+  ll: "Primera Division",
+};
+
 function getArgs() {
   let method;
   let competition;
-  let team;
   process.argv.forEach(function (val, index, array) {
     if (
       val === "upcoming" ||
@@ -270,13 +294,11 @@ function getArgs() {
       val === "--comp" ||
       (val === "-C" && index < array.length - 1)
     ) {
-      competition = array[index + 1];
-    } else if (val === "--team" || val === "-T") {
-      team = array[index + 1];
+      competition = competitionAlias[array[index + 1].toLowerCase()];
     }
   });
 
-  return [method, competition, team];
+  return [method, competition];
 }
 
 async function mainMenu() {
@@ -309,7 +331,7 @@ async function mainMenu() {
 }
 
 async function run() {
-  let [method, competition, team] = getArgs();
+  let [method, competition] = getArgs();
   switch (method) {
     case "standings":
       await standings(competition);

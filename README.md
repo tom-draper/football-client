@@ -12,6 +12,7 @@ The script can be run using `npx`:
 npx football-client
 ```
 
+
 ### Installation
 
 Alternatively, you can install directly on to your local system with:
@@ -23,5 +24,27 @@ npm i football-client
 and then run using:
 
 ```bash
-node index.js
+node index
+```
+
+### Arguments
+
+The menu option (`standings`, `fixtures`, `upcoming` or `scorers`) can be selected immediately from the command-line using a command-line argument.
+
+```bash
+npx football-client standings
+```
+
+```bash
+node index fixtures
+```
+
+When accessing standings, fixtures or scorers, the competition can be specified with the `--competition` flag. Available competitions include `premier-league`, `championship`, `la-liga`, `serie-a`, `ligue-1` and `bundesliga`. If none specified, the Premier League is used as default.
+
+```bash
+npx football-client fixtures --competition bundesliga
+```
+
+```bash
+node index scorers --competition serie-a
 ```
