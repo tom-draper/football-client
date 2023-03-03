@@ -28,22 +28,18 @@ node index
 
 ### Arguments
 
-As an alternative to the main menu, the page (`standings`, `fixtures`, `upcoming` or `scorers`) can be specified immediately as a command-line argument.
+The main menu can be skipped by passing the target page name (`standings`, `fixtures`, `upcoming` or `scorers`) as a command-line argument.
 
 ```bash
 npx football-client standings
 ```
 
-```bash
-node index fixtures
-```
-
 When specifying standings, fixtures or scorers as a command-line argument, the competition can also be input using the `--competition` flag. Available competitions include `premier-league`, `championship`, `la-liga`, `serie-a`, `ligue-1` and `bundesliga`. If none specified, the Premier League is used as default.
 
 ```bash
-npx football-client fixtures --competition bundesliga
-```
+npx football-client standings --competition la-liga
 
-```bash
-node index scorers --competition serie-a
+npx football-client fixtures --competition bundesliga
+
+npx football-client scorers --competition serie-a
 ```
