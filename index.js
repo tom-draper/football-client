@@ -186,7 +186,7 @@ async function standings(competition) {
 function formatStandingsTeamName(teamName, position, padding) {
   if (position === 1) {
     return chalk.greenBright(ljust(teamName, padding));
-  } else if (position > 1 && position < 4) {
+  } else if (position > 1 && position < 5) {
     return chalk.cyanBright(ljust(teamName, padding));
   } else if (position > 17) {
     return chalk.redBright(ljust(teamName, padding));
