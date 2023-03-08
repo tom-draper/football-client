@@ -183,7 +183,7 @@ async function standings(competition) {
   }
 }
 
-function formatStandingsTeamName(teamName, postition, padding) {
+function formatStandingsTeamName(teamName, position, padding) {
   if (position === 1) {
     return chalk.greenBright(ljust(row.team.shortName, padding));
   } else if (position > 1 && position < 4) {
