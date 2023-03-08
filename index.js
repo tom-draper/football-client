@@ -185,23 +185,23 @@ async function standings(competition) {
 
 function formatStandingsTeamName(teamName, position, padding) {
   if (position === 1) {
-    return chalk.greenBright(ljust(row.team.shortName, padding));
+    return chalk.greenBright(ljust(teamName, padding));
   } else if (position > 1 && position < 4) {
-    return chalk.cyanBright(ljust(row.team.shortName, padding));
+    return chalk.cyanBright(ljust(teamName, padding));
   } else if (position > 17) {
-    return chalk.redBright(ljust(row.team.shortName, padding));
+    return chalk.redBright(ljust(teamName, padding));
   } else {
-    return ljust(row.team.shortName, padding);
+    return ljust(teamName, padding);
   }
 }
 
 function formatStandingsGoalDifference(gd, padding) {
   if (gd > 0) {
-    return chalk.greenBright(rjust(row.goalDifference, padding));
+    return chalk.greenBright(rjust(gd, padding));
   } else if (gd < 0) {
-    return chalk.redBright(rjust(row.goalDifference, padding));
+    return chalk.redBright(rjust(gd, padding));
   } else {
-    return rjust(row.goalDifference, padding);
+    return rjust(gd, padding);
   }
 }
 
