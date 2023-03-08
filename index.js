@@ -168,7 +168,7 @@ async function standings(competition) {
     console.log(
       `${chalk.gray(ljust(row.position, 2))} ${formatStandingsTeamName(
         row.team.shortName,
-        i+1
+        i+1,
         18
       )} ${rjust(row.playedGames, 2)} ${rjust(row.won, 4)} ${rjust(
         row.draw,
