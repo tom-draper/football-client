@@ -164,10 +164,11 @@ async function standings(competition) {
     rjust("GD", 3),
     rjust("P", 4)
   );
-  for (const row of data.standings[0].table) {
+  for (const [i, row] of data.standings[0].table.entries()) {
     console.log(
-      `${chalk.gray(ljust(row.position, 2))} ${ljust(
+      `${chalk.gray(ljust(row.position, 2))} ${formatStandingsTeamName(
         row.team.shortName,
+        i+1
         18
       )} ${rjust(row.playedGames, 2)} ${rjust(row.won, 4)} ${rjust(
         row.draw,
@@ -175,10 +176,32 @@ async function standings(competition) {
       )} ${rjust(row.lost, 2)} ${rjust(row.goalsFor, 4)} ${rjust(
         row.goalsAgainst,
         2
-      )} ${rjust(row.goalDifference, 3)} ${chalk.yellowBright(
+      )} ${formatStandingsGoalDifference(row.goalDifference, 3)} ${chalk.yellowBright(
         rjust(row.points, 4)
       )}`
     );
+  }
+}
+
+function formatStandingsTeamName(teamName, postition, padding) {
+  if (position === 1) {
+    return chalk.greenBright(ljust(row.team.shortName, padding));
+  } else if (position > 1 && position < 4) {
+    return chalk.cyanBright(ljust(row.team.shortName, padding));
+  } else if (position > 17) {
+    return chalk.redBright(ljust(row.team.shortName, padding));
+  } else {
+    return ljust(row.team.shortName, padding);
+  }
+}
+
+function formatStandingsGoalDifference(gd, padding) {
+  if (gd > 0) {
+    return chalk.greenBright(rjust(row.goalDifference, padding));
+  } else if (gd < 0) {
+    return chalk.redBright(rjust(row.goalDifference, padding));
+  } else {
+    return rjust(row.goalDifference, padding);
   }
 }
 
