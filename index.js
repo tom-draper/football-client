@@ -152,6 +152,12 @@ async function standings(competition) {
   if ("message" in data) {
     return;
   }
+  
+  let total = 0;
+  for (let row of data.standings[0].table) {
+    total += row.playedGames
+  }
+  const meanPlayed = total / data.standings[0].table.length
 
   console.log(chalk.blueBright(`${competition.toUpperCase()} STANDINGS:`));
   console.log(
@@ -170,7 +176,7 @@ async function standings(competition) {
         row.team.shortName,
         i+1,
         18
-      )} ${rjust(row.playedGames, 2)} ${rjust(row.won, 4)} ${rjust(
+      )} ${formatStandingsPlayed(row.playedGames, meanPlayed, 2)} ${rjust(row.won, 4)} ${rjust(
         row.draw,
         2
       )} ${rjust(row.lost, 2)} ${rjust(row.goalsFor, 4)} ${rjust(
@@ -202,6 +208,16 @@ function formatStandingsGoalDifference(gd, padding) {
     return chalk.redBright(rjust(gd, padding));
   } else {
     return rjust(gd, padding);
+  }
+}
+
+function formatStandingsPlayed(pl, mean, padding) {
+  if (pl > Math.ceil(mean)) {
+    return chalk.greenBright(rjust(pl, padding));
+  } else if (pl < Math.floor(mean)) {
+    return chalk.redBright(rjust(pl, padding));
+  } else {
+    return rjust(pl, padding);
   }
 }
 
