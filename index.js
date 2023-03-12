@@ -368,21 +368,56 @@ async function mainMenu() {
 
   clearLastLines(5);
 
+  let competition;
   switch (input) {
     case "1":
-      await standings(undefined);
+      competition = await getCompetition();
+      await standings(competition);
       break;
     case "2":
-      await fixtures(undefined);
+      competition = await getCompetition();
+      await fixtures(competition);
       break;
     case "3":
       await upcoming();
       break;
     case "4":
-      await scorers(undefined);
+      competition = await getCompetition();
+      await scorers(competition);
       break;
     default:
       await mainMenu();
+  }
+}
+
+async function getCompetition() {
+  const input = await rl.question(
+    `${chalk.yellowBright("1")} Premier League\n${chalk.yellowBright(
+      "2"
+    )} Championship\n${chalk.yellowBright("3")} La Liga\n${chalk.yellowBright(
+      "4"
+    )} Ligue 1\n${chalk.yellowBright("5")} Bundesliga\n${chalk.yellowBright(
+      "6"
+    )} Serie A\n`
+  );
+
+  clearLastLines(7);
+
+  switch (input) {
+    case "1":
+      return "Premier League";
+    case "2":
+      return "Championship";
+    case "3":
+      return "Primera Division";
+    case "4":
+      return "Ligue 1";
+    case "5":
+      return "Bundesliga";
+    case "6":
+      return "Serie A";
+    default:
+      return await getCompetition();
   }
 }
 
