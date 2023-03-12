@@ -101,7 +101,7 @@ async function upcoming() {
   for (const match of data.matches) {
     if (match.status === "IN_PLAY" || match.status === "PAUSED") {
       inplay.push(match);
-    } else {
+    } else if (match.status === "SCHEDULED") {
       scheduled.push(match);
     }
   }
@@ -117,30 +117,34 @@ async function upcoming() {
           })
         )} ${ljust(
           match.homeTeam.shortName +
-            chalk.yellowBright(" 0 - 0 ") +
+            chalk.grey(" vs ") +
             match.awayTeam.shortName,
           40
         )} ${chalk.grey(match.competition.name)}`
       );
     }
-    console.log();
+    if (scheduled.length > 0) {
+      console.log();
+    }
   }
 
-  console.log(chalk.blueBright(`SCHEDULED:`));
-  for (const match of scheduled) {
-    console.log(
-      `${chalk.grey(
-        new Date(match.utcDate).toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      )} ${ljust(
-        match.homeTeam.shortName +
-          chalk.grey(" vs ") +
-          match.awayTeam.shortName,
-        40
-      )} ${chalk.grey(`${match.competition.name}`)}`
-    );
+  if (scheduled.length > 0) {
+    console.log(chalk.blueBright(`SCHEDULED:`));
+    for (const match of scheduled) {
+      console.log(
+        `${chalk.grey(
+          new Date(match.utcDate).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        )} ${ljust(
+          match.homeTeam.shortName +
+            chalk.grey(" vs ") +
+            match.awayTeam.shortName,
+          40
+        )} ${chalk.grey(`${match.competition.name}`)}`
+      );
+    }
   }
 }
 
