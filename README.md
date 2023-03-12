@@ -2,6 +2,10 @@
 
 A command-line tool for checking football scores, fixtures and standings.
 
+<p align="center">
+  <img width="500" src="https://user-images.githubusercontent.com/41476809/224568833-48026f5a-40a5-4a1e-b622-ada6da3ba72d.gif" />
+</p>
+
 Football data is sourced from https://www.football-data.org/, and a free account is required. You can enter your unique API token straight from the command-line during the setup routine, or set it as an environment variable in `X_AUTH_TOKEN` in a `.env` file at the root of the project.
 
 ## Usage
