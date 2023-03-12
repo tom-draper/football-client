@@ -5,6 +5,10 @@ import chalk from "chalk";
 import * as readline from "node:readline/promises"; // This uses the promise-based APIs
 import { stdin as input, stdout as output } from "node:process";
 import fs from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 let API_KEY;
 const URL = "https://api.football-data.org/v4/";
@@ -44,12 +48,20 @@ async function setAPIKey() {
   }
 
   if (noEnvFile) {
-    // Save API key to a local .env file
-    fs.writeFile("./.env", `X_AUTH_TOKEN=${API_KEY}`, function (err) {
-      if (err) {
-        return console.log(err);
-      }
-    });
+    const store = await rl.question(
+      "Save API key to .env in current directory? (Y/N) "
+    );
+    clearLastLine();
+
+    if (store == "y" || store == "Y") {
+      // Save API key to a local .env file
+      fs.writeFile("./.env", `X_AUTH_TOKEN=${API_KEY}`, function (err) {
+        if (err) {
+          return console.log(err);
+        }
+      });
+      console.log(`Saved API key to ${__dirname}/.env`);
+    }
   }
 }
 
@@ -152,12 +164,12 @@ async function standings(competition) {
   if ("message" in data) {
     return;
   }
-  
+
   let total = 0;
   for (let row of data.standings[0].table) {
-    total += row.playedGames
+    total += row.playedGames;
   }
-  const meanPlayed = total / data.standings[0].table.length
+  const meanPlayed = total / data.standings[0].table.length;
 
   console.log(chalk.blueBright(`${competition.toUpperCase()} STANDINGS:`));
   console.log(
@@ -174,17 +186,18 @@ async function standings(competition) {
     console.log(
       `${chalk.gray(ljust(row.position, 2))} ${formatStandingsTeamName(
         row.team.shortName,
-        i+1,
+        i + 1,
         18
-      )} ${formatStandingsPlayed(row.playedGames, meanPlayed, 2)} ${rjust(row.won, 4)} ${rjust(
-        row.draw,
-        2
-      )} ${rjust(row.lost, 2)} ${rjust(row.goalsFor, 4)} ${rjust(
-        row.goalsAgainst,
-        2
-      )} ${formatStandingsGoalDifference(row.goalDifference, 3)} ${chalk.yellowBright(
-        rjust(row.points, 4)
-      )}`
+      )} ${formatStandingsPlayed(row.playedGames, meanPlayed, 2)} ${rjust(
+        row.won,
+        4
+      )} ${rjust(row.draw, 2)} ${rjust(row.lost, 2)} ${rjust(
+        row.goalsFor,
+        4
+      )} ${rjust(row.goalsAgainst, 2)} ${formatStandingsGoalDifference(
+        row.goalDifference,
+        3
+      )} ${chalk.yellowBright(rjust(row.points, 4))}`
     );
   }
 }
