@@ -21,7 +21,7 @@ npx football-client
 Alternatively, you can install directly on to your local system with:
 
 ```bash
-npm i football-client
+npm install football-client
 ```
 
 and then run using:
