@@ -38,7 +38,7 @@ The main menu can be skipped by passing the target page name (`standings`, `fixt
 npx football-client standings
 ```
 
-When specifying standings, fixtures or scorers as a command-line argument, the competition can also be input using the `--competition` flag followed by the competition name (`premier-league`, `championship`, `la-liga`, `serie-a`, `ligue-1` or `bundesliga`). If none specified, the 'premier-league' is used as default.
+When specifying standings, fixtures or scorers as a command-line argument, the competition can also be input using the `--competition` flag followed by the competition name (`premier-league`, `championship`, `la-liga`, `serie-a`, `ligue-1` or `bundesliga`). If none specified, the `premier-league` is used as default.
 
 ```bash
 npx football-client standings --competition la-liga
