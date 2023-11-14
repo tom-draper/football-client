@@ -1,12 +1,12 @@
 {
   "name": "football-client",
   "type": "module",
-  "version": "1.0.20",
+  "version": "1.0.22",
   "description": "A CLI tool for checking score, fixtures and standings.",
-  "main": "index.js",
-  "bin": "index.js",
+  "main": "main.js",
+  "bin": "main.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

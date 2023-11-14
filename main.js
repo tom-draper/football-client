@@ -53,7 +53,7 @@ async function setAPIKey() {
     );
     clearLastLine();
 
-    if (store == "y" || store == "Y") {
+    if (store === "y" || store === "Y") {
       // Save API key to a local .env file
       fs.writeFile("./.env", `X_AUTH_TOKEN=${API_KEY}`, function (err) {
         if (err) {
@@ -255,8 +255,8 @@ async function scorers(competition) {
     console.log(
       `${ljust(player.player.name, 22)} ${chalk.grey(
         ljust(`${player.team.shortName}`, 16)
-      )} ${chalk.greenBright(rjust(player.goals, 2))} ${chalk.blueBright(
-        rjust(player.assists, 2)
+      )} ${chalk.greenBright(rjust(player.goals ?? 0, 2))} ${chalk.blueBright(
+        rjust(player.assists ?? 0, 2)
       )}`
     );
   }
